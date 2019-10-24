@@ -2,6 +2,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.*;
 
 /**
  * 数据库：
@@ -27,7 +28,7 @@ import java.sql.Statement;
  *              是存储记录的集合，所涉及的是数据库所有对象的逻辑关系；
  *          3、逻辑数据层：用户看到和使用的数据库，是一个或一些特定用户使用的数据集合，即逻辑记录的集合。
  *      3、数据库的种类及功能：
- *          1、层次型数据库：类似树形结构，十一组通过连接而相互联系在一起的记录。特点是记录之间的联系通过指针实现。
+ *          1、层次型数据库：类似树形结构，是一组通过连接而相互联系在一起的记录。特点是记录之间的联系通过指针实现。
  *              层次模型层次顺序严格而且复杂，因此对数据的各项操作都很困难；
  *          2、网状数据库：使用网络结构表示实体类型、实体间联系。特点是容易实现多对多的联系，但在编写引用程序时必须
  *              熟悉数据库的逻辑结构；
@@ -76,7 +77,7 @@ import java.sql.Statement;
  *                  7、rollback()：取消当前事务汇总进行的所有更改，并释放此Connection对象当前持有的所有数据库锁
  *                  8、close()：立即释放此Connection对象的数据库和JDBC资源。
  *              2、Statement接口：用于在已经建立连接的基础上向数据库发送SQL语句。
- *                  1、JDBC中有3中Statement对象：
+ *                  1、JDBC中有3种Statement对象：
  *                      1、Statement：用于执行不带参数的简单SQL语句；
  *                      2、PreparedStatement：继承了Statement，用于执行动态的SQL语句；
  *                      3、CallableStatement：继承了PreparedStatement，用于执行对数据库的存储过程的调用。
@@ -89,7 +90,7 @@ import java.sql.Statement;
  *                      5、addBatch(String sql)：将给定的sql语句添加在Statement对象的命令列表中，如果驱动程序不支持
  *                          批量处理，将抛出异常；
  *                      6、close()：释放Statement实例占用的数据库和JDBC资源。
- *              3、PreparedStatement接口：通过PreparedStatement实例执行的冬天SQL语句，将被预编译并保存到
+ *              3、PreparedStatement接口：通过PreparedStatement实例执行的动态SQL语句，将被预编译并保存到
  *                  PreparedStatement实例中，从而可以反复地执行该SQL语句
  *                  1、常用方法：
  *                      1、setInt(int index, int k)：将index位置上的参数设置为int类型的k；
@@ -110,6 +111,47 @@ import java.sql.Statement;
  *                      1、getConnection(String url, String user, String password)：获取数据库的连接；
  *                      2、setLoginTimeout()：设置登录数据库时的超时时间，单位为秒；
  *                      3、println(String message)：在JDBC日志中打印一条信息。
+ *              5、ResultSet接口：用来暂时存放数据库查询操作所获得的结果集，类似一个临时表。ResultSet实例具有指向当前
+ *                  数据行的指针，指针开始的位置在第一条记录的前面，通过next()方法可将指针向下移。
+ *                  1、常用方法：
+ *                      1、getInt()：以int形式获取此ResultSet对象的当前行的指定列值，如果列值是NULL，则返回值是0
+ *                      2、getFloat()：以float形式获取此ResultSet对象的当前行的指定列值，如果列值是NULL，则返回值是0
+ *                      3、getDate()：以date形式获取此ResultSet对象的当前行的指定列值，如果列值是NULL，则返回值是null
+ *                      4、getBoolean()：以boolean形式获取此ResultSet对象的当前行的指定列值，如果列值是NULL，则返回值是null
+ *                      5、getString()：以String形式获取此ResultSet对象的当前行的指定列值，如果列值是NULL，则返回值是null
+ *                      6、getObject()：以Object形式获取此ResultSet对象的当前行的指定列值，如果列值是NULL，则返回值是null
+ *                      7、first()：将指针移到当前记录的第一行
+ *                      8、last()：将指针移到当前记录的最后一行
+ *                      9、next()：将指针移到下一行
+ *                      10、beforeFirst()：将指针移到集合开头
+ *                      11、afterLast()：将指针移到集合结尾
+ *                      12、absolute(int index)：将指针移到指定行
+ *                      13、isFirst()：判断指针是否在集合第一行
+ *                      14、isLast()：判断指针是否在集合最后一行
+ *                      15、updateInt()：用int值更新集合指定列，不会同步修改数据库中的记录
+ *                      16、updateFloat()：用float值更新集合指定列，不会同步修改数据库中的记录
+ *                      17、updateLong()：用long值更新集合指定列，不会同步修改数据库中的记录
+ *                      18、updateString()：用String值更新集合指定列，不会同步修改数据库中的记录
+ *                      19、updateObject()：用Object值更新集合指定列，不会同步修改数据库中的记录
+ *                      20、updateNull()：用NULL值更新集合指定列，不会同步修改数据库中的记录
+ *                      21、updateDate()：用date值更新集合指定列，不会同步修改数据库中的记录
+ *                      22、updateDouble()：用double值更新集合指定列，不会同步修改数据库中的记录
+ *                      23、getRow()：查看当前行的索引号
+ *                      24、insertRow()：将插入行的内容插入到数据库中
+ *                      25、updateRow()：将当前行的内容同步更新倒数据库中
+ *                      26、deleteRow()：删除当前行，但不同步到数据库中，在执行close()方法后同步到数据库中
+ *                  2、连接数据库步骤：
+ *                      1、DriverManage.getConnection("jdbc:mysql://ip:port/database","user","pwd")建立数据库连接con
+ *                      执行sql：
+ *                          2、con.createStatement()实例化Statement对象sql;
+ *                          3、sql.executeQuery(sql)执行sql获取ResultSet结果
+ *                          4、对结果进行处理
+ *                      执行预编译sql：
+ *                          2、con.prepareStatement(sql)实例化preparedStatement对象sql;
+ *                          3、sql.setInt(paramIndex, value)设置动态sql的参数
+ *                          4、sql.executeQuery()执行sql获取ResultSet结果集
+ *                          5、处理结果
+ *
  *
  *
  *
@@ -119,12 +161,102 @@ import java.sql.Statement;
  */
 
 public class Database {
-    public static void main(String[] args){
+    public Connection getConnection() {
+        Connection conn = null;
         try {
-            Connection conn = DriverManager.getConnection("test", "root", "w*Lzx2923");
-            Statement sql = conn.createStatement();
+            /**
+             * 加载数据库驱动，下载驱动包，点击File->Project Structure->Modules->dependencies 点击绿色加号，JARs or ...
+             * 把下载的jar包导入即可。
+             */
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            // 打开数据库连接
+            conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/test?characterEncoding=UTF-8", "root", "w*Lzx2923");
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return conn;
+    }
+
+    public void printResultSet(ResultSet res) throws SQLException {
+        while(res.next()) {
+            System.out.print("id:" + res.getInt("id"));
+            System.out.print("  name:" + res.getString("name"));
+            System.out.println();
+        }
+        System.out.println("--------------------------------------------------");
+    }
+
+    public void normalStatementTest(Connection conn) {
+        try {
+            Statement sql = conn.createStatement(); // 创建Statement对象
+            ResultSet res = sql.executeQuery("SELECT * FROM USER WHERE id > 2"); // 执行sql取到返回的结果集
+            printResultSet(res);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 预处理语句，执行动态sql
+     * @param conn
+     */
+    public void preparedStatement(Connection conn) {
+        try {
+            // 定义预编译sql
+            PreparedStatement sql = conn.prepareStatement("SELECT * FROM USER WHERE id = ?");
+            // 设置sql语句参数
+            sql.setInt(1, 2);
+            // 执行sql
+            ResultSet res = sql.executeQuery();
+            printResultSet(res);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    void dbAction(Connection conn) {
+        try {
+            // 插入
+            PreparedStatement sql = conn.prepareStatement("INSERT INTO USER (NAME) VALUE(?)");
+            sql.setString(1, "荒天帝");
+            sql.executeUpdate();
+            sql.setString(1, "叶天帝");
+            sql.executeUpdate();
+            sql.setString(1, "无始大帝");
+            sql.executeUpdate();
+            sql.setString(1, "狠人大帝");
+            sql.executeUpdate();
+
+            // 修改
+            sql = conn.prepareStatement("UPDATE USER SET NAME = ? WHERE id = ?");
+            sql.setString(1, "石昊");
+            sql.setInt(2, 13);
+            sql.executeUpdate();
+            sql.setString(1, "叶凡");
+            sql.setInt(2, 14);
+            sql.executeUpdate();
+
+            sql = conn.prepareStatement("DELETE FROM USER WHERE id = ?");
+            sql.setInt(1, 3);
+            sql.executeUpdate();
+            sql.setInt(1, 4);
+            sql.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        normalStatementTest(conn);
+    }
+
+    public static void main(String[] args){
+        Database db = new Database();
+        Connection conn = db.getConnection();
+        db.normalStatementTest(conn);
+        db.preparedStatement(conn);
+        db.dbAction(conn);
     }
 }
