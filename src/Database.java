@@ -67,7 +67,7 @@ import java.sql.*;
  *          3、JDBC中常用的类和接口：
  *              1、Connection接口：代表与特定的数据库的连接，在连接上下文中执行SQL语句并返回结果。
  *                  1、createStatement()：创建Statement对象
- *                  2、createStatement(int resultSetType, int resultSetConcurrency)：创建一个Statement对象，改对象
+ *                  2、createStatement(int resultSetType, int resultSetConcurrency)：创建一个Statement对象，该对象
  *                      将生成具有给定类型、并发性和可保存性的ResultSet对象
  *                  3、preparedStatement()：创建预处理对象preparedStatement
  *                  4、isReadOnly()：查看当前Connection对象是否为只读形式
@@ -196,6 +196,7 @@ public class Database {
             Statement sql = conn.createStatement(); // 创建Statement对象
             ResultSet res = sql.executeQuery("SELECT * FROM USER WHERE id > 2"); // 执行sql取到返回的结果集
             printResultSet(res);
+            sql.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -214,6 +215,7 @@ public class Database {
             // 执行sql
             ResultSet res = sql.executeQuery();
             printResultSet(res);
+            sql.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -246,6 +248,8 @@ public class Database {
             sql.executeUpdate();
             sql.setInt(1, 4);
             sql.executeUpdate();
+
+            sql.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
